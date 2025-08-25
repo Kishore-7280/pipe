@@ -1,7 +1,10 @@
+"use client";
+
 function Products() {
   try {
     const [currentSlide, setCurrentSlide] = React.useState(0);
-    
+    const [isMobile, setIsMobile] = React.useState(false);
+
     const products = [
       {
         id: 1,
@@ -69,12 +72,22 @@ function Products() {
       }
     ];
 
-    // Group products into rows of 4
+    // Detect mobile screen
+    React.useEffect(() => {
+      const checkMobile = () => setIsMobile(window.innerWidth < 768);
+      checkMobile();
+      window.addEventListener("resize", checkMobile);
+      return () => window.removeEventListener("resize", checkMobile);
+    }, []);
+
+    // Group products (4 per slide on desktop, 1 per slide on mobile)
     const productRows = [];
-    for (let i = 0; i < products.length; i += 4) {
-      productRows.push(products.slice(i, i + 4));
+    const itemsPerSlide = isMobile ? 1 : 4;
+    for (let i = 0; i < products.length; i += itemsPerSlide) {
+      productRows.push(products.slice(i, i + itemsPerSlide));
     }
 
+    // Auto slide
     React.useEffect(() => {
       const interval = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % productRows.length);
@@ -82,25 +95,15 @@ function Products() {
       return () => clearInterval(interval);
     }, [productRows.length]);
 
-    const goToSlide = (index) => {
-      setCurrentSlide(index);
-    };
-
-    const nextSlide = () => {
-      setCurrentSlide((prev) => (prev + 1) % productRows.length);
-    };
-
-    const prevSlide = () => {
-      setCurrentSlide((prev) => (prev - 1 + productRows.length) % productRows.length);
-    };
+    const goToSlide = (index) => setCurrentSlide(index);
+    const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % productRows.length);
+    const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + productRows.length) % productRows.length);
 
     return (
       <section id="products" className="py-20 bg-white" data-name="products" data-file="components/Products.js">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 fade-in">
-            <h2 className="text-4xl font-bold text-[var(--text-dark)] mb-4">
-              Our Products
-            </h2>
+            <h2 className="text-4xl font-bold text-[var(--text-dark)] mb-4">Our Products</h2>
             <p className="text-lg text-[var(--text-light)] max-w-2xl mx-auto">
               Explore our comprehensive range of high-quality pipes and motors designed for industrial excellence
             </p>
@@ -114,29 +117,19 @@ function Products() {
               >
                 {productRows.map((row, rowIndex) => (
                   <div key={rowIndex} className="w-full flex-shrink-0">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+                    <div className={`grid ${isMobile ? "grid-cols-1" : "md:grid-cols-2 lg:grid-cols-4"} gap-6 px-4`}>
                       {row.map((product) => (
                         <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105">
                           <div className="relative h-48">
-                            <img 
-                              src={product.image}
-                              alt={product.title}
-                              className="w-full h-full object-cover"
-                            />
+                            <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
                             <div className="absolute top-3 right-3">
-                              <span className="bg-[var(--primary-color)] text-white px-2 py-1 rounded-full text-xs">
-                                {product.category}
-                              </span>
+                              <span className="bg-[var(--primary-color)] text-white px-2 py-1 rounded-full text-xs">{product.category}</span>
                             </div>
                           </div>
                           
                           <div className="p-4">
-                            <h3 className="text-lg font-bold text-[var(--text-dark)] mb-2">
-                              {product.title}
-                            </h3>
-                            <p className="text-[var(--text-light)] text-sm mb-3">
-                              {product.description}
-                            </p>
+                            <h3 className="text-lg font-bold text-[var(--text-dark)] mb-2">{product.title}</h3>
+                            <p className="text-[var(--text-light)] text-sm mb-3">{product.description}</p>
                             
                             <div className="mb-4">
                               <ul className="text-xs text-[var(--text-light)] space-y-1">
@@ -149,9 +142,7 @@ function Products() {
                               </ul>
                             </div>
                             
-                            <button className="w-full btn-primary text-sm py-2">
-                              Request Quote
-                            </button>
+                            <button className="w-full btn-primary text-sm py-2">Request Quote</button>
                           </div>
                         </div>
                       ))}
