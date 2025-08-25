@@ -50,26 +50,48 @@ function Products() {
         image: "https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
         category: "Motors",
         specifications: ["High precision", "Fast response", "Programmable"]
+      },
+      {
+        id: 7,
+        title: "Stainless Steel Pipes",
+        description: "Corrosion-resistant stainless steel pipes for harsh environments",
+        image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        category: "Pipes",
+        specifications: ["Corrosion proof", "Food grade", "High temperature resistant"]
+      },
+      {
+        id: 8,
+        title: "Variable Speed Motors",
+        description: "Energy-efficient variable frequency drive motors",
+        image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        category: "Motors",
+        specifications: ["Energy saving", "Speed control", "Smart automation"]
       }
     ];
 
+    // Group products into rows of 4
+    const productRows = [];
+    for (let i = 0; i < products.length; i += 4) {
+      productRows.push(products.slice(i, i + 4));
+    }
+
     React.useEffect(() => {
       const interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % products.length);
-      }, 3500);
+        setCurrentSlide((prev) => (prev + 1) % productRows.length);
+      }, 4000);
       return () => clearInterval(interval);
-    }, [products.length]);
+    }, [productRows.length]);
 
     const goToSlide = (index) => {
       setCurrentSlide(index);
     };
 
     const nextSlide = () => {
-      setCurrentSlide((prev) => (prev + 1) % products.length);
+      setCurrentSlide((prev) => (prev + 1) % productRows.length);
     };
 
     const prevSlide = () => {
-      setCurrentSlide((prev) => (prev - 1 + products.length) % products.length);
+      setCurrentSlide((prev) => (prev - 1 + productRows.length) % productRows.length);
     };
 
     return (
@@ -84,52 +106,55 @@ function Products() {
             </p>
           </div>
 
-          <div className="relative max-w-5xl mx-auto">
-            <div className="overflow-hidden rounded-xl shadow-2xl">
+          <div className="relative">
+            <div className="overflow-hidden">
               <div 
                 className="flex transition-transform duration-700 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
-                {products.map((product, index) => (
-                  <div key={product.id} className="w-full flex-shrink-0 px-4">
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden mx-auto max-w-sm">
-                      <div className="relative h-64">
-                        <img 
-                          src={product.image}
-                          alt={product.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-4 right-4">
-                          <span className="bg-[var(--primary-color)] text-white px-3 py-1 rounded-full text-sm">
-                            {product.category}
-                          </span>
+                {productRows.map((row, rowIndex) => (
+                  <div key={rowIndex} className="w-full flex-shrink-0">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+                      {row.map((product) => (
+                        <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                          <div className="relative h-48">
+                            <img 
+                              src={product.image}
+                              alt={product.title}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute top-3 right-3">
+                              <span className="bg-[var(--primary-color)] text-white px-2 py-1 rounded-full text-xs">
+                                {product.category}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="p-4">
+                            <h3 className="text-lg font-bold text-[var(--text-dark)] mb-2">
+                              {product.title}
+                            </h3>
+                            <p className="text-[var(--text-light)] text-sm mb-3">
+                              {product.description}
+                            </p>
+                            
+                            <div className="mb-4">
+                              <ul className="text-xs text-[var(--text-light)] space-y-1">
+                                {product.specifications.slice(0, 2).map((spec, i) => (
+                                  <li key={i} className="flex items-center">
+                                    <div className="icon-check text-[var(--accent-color)] text-xs mr-2"></div>
+                                    {spec}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            
+                            <button className="w-full btn-primary text-sm py-2">
+                              Request Quote
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="p-6">
-                        <h3 className="text-xl font-bold text-[var(--text-dark)] mb-3">
-                          {product.title}
-                        </h3>
-                        <p className="text-[var(--text-light)] mb-4">
-                          {product.description}
-                        </p>
-                        
-                        <div className="mb-4">
-                          <h4 className="font-semibold text-[var(--text-dark)] mb-2">Key Features:</h4>
-                          <ul className="text-sm text-[var(--text-light)] space-y-1">
-                            {product.specifications.map((spec, i) => (
-                              <li key={i} className="flex items-center">
-                                <div className="icon-check text-[var(--accent-color)] text-sm mr-2"></div>
-                                {spec}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        
-                        <button className="w-full btn-primary">
-                          Request Quote
-                        </button>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -139,21 +164,21 @@ function Products() {
             {/* Navigation Controls */}
             <button 
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-3 shadow-lg transition-all duration-200"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-3 shadow-lg transition-all duration-200 z-10"
             >
               <div className="icon-chevron-left text-xl text-[var(--primary-color)]"></div>
             </button>
             
             <button 
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-3 shadow-lg transition-all duration-200"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-3 shadow-lg transition-all duration-200 z-10"
             >
               <div className="icon-chevron-right text-xl text-[var(--primary-color)]"></div>
             </button>
 
             {/* Dots Navigation */}
             <div className="flex justify-center mt-8 space-x-3">
-              {products.map((_, index) => (
+              {productRows.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}

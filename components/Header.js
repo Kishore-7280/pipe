@@ -42,14 +42,23 @@ function Header() {
               <div className="text-white text-xl font-bold">PipeMaster</div>
             </div>
 
-            {/* Search Bar - Desktop */}
-            <div className="hidden md:flex flex-1 max-w-md mx-8 relative">
+            {/* Desktop Navigation - Center */}
+            <div className="hidden md:flex space-x-6">
+              <button onClick={() => scrollToSection('home')} className="nav-link">Home</button>
+              <button onClick={() => scrollToSection('about')} className="nav-link">About</button>
+              <button onClick={() => scrollToSection('products')} className="nav-link">Products</button>
+              <button onClick={() => scrollToSection('services')} className="nav-link">Services</button>
+              <button onClick={() => scrollToSection('contact')} className="nav-link">Contact</button>
+            </div>
+
+            {/* Search Bar - Right */}
+            <div className="hidden md:flex relative">
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-[var(--secondary-color)]"
+                className="w-64 px-4 py-2 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-[var(--secondary-color)]"
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                 <div className="icon-search text-gray-400"></div>
@@ -57,7 +66,7 @@ function Header() {
               
               {/* Search Results */}
               {showResults && searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto">
+                <div className="absolute top-full right-0 w-80 bg-white rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto">
                   {searchResults.map((product, index) => (
                     <div 
                       key={index}
@@ -70,15 +79,6 @@ function Header() {
                   ))}
                 </div>
               )}
-            </div>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex space-x-6">
-              <button onClick={() => scrollToSection('home')} className="nav-link">Home</button>
-              <button onClick={() => scrollToSection('about')} className="nav-link">About</button>
-              <button onClick={() => scrollToSection('products')} className="nav-link">Products</button>
-              <button onClick={() => scrollToSection('services')} className="nav-link">Services</button>
-              <button onClick={() => scrollToSection('contact')} className="nav-link">Contact</button>
             </div>
             
             {/* Mobile Menu Button */}

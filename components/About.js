@@ -2,7 +2,7 @@ function About() {
   try {
     return (
       <section id="about" className="py-20 bg-[var(--bg-light)]" data-name="about" data-file="components/About.js">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 py-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="slide-in-left">
               <img 
@@ -28,7 +28,8 @@ function About() {
                   <div className="text-3xl font-bold text-[var(--primary-color)] mb-2">25+</div>
                   <div className="text-sm text-[var(--text-light)]">Years Experience</div>
                 </div>
-                <div className="text-center p-4 bg-white rounded-lg shadow-md">
+                <div className="text-center p-4 bg-white rounded-lg shadow-md 
+                                box-shadow: var(--shadow-md)">
                   <div className="text-3xl font-bold text-[var(--primary-color)] mb-2">5000+</div>
                   <div className="text-sm text-[var(--text-light)]">Happy Clients</div>
                 </div>
